@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import * as taskController from '@/api/v1/internal/task/controller';
 
 const router = Router();
 
@@ -12,11 +13,10 @@ const router = Router();
 
 /**
  * @summary
- * Feature routes will be added here as they are implemented
- * Examples:
- * - Task management routes
- * - User profile routes
- * - Settings routes
+ * Task management routes
  */
+router.post('/task', taskController.postHandler);
+router.get('/task/pending', taskController.getPendingHandler);
+router.get('/task/expired', taskController.getExpiredHandler);
 
 export default router;

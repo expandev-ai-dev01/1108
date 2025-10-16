@@ -16,7 +16,14 @@ let pool: sql.ConnectionPool | null = null;
  */
 export async function getPool(): Promise<sql.ConnectionPool> {
   if (!pool) {
-    pool = await sql.connect(config.database);
+    pool = await sql.connect({
+      server: config.database.host,
+      port: config.database.port,
+      user: config.database.user,
+      password: config.database.password,
+      database: config.database.database,
+      options: config.database.options,
+    });
     console.log('Database connection pool created');
   }
   return pool;
@@ -78,7 +85,9 @@ export async function dbRequest(
       if (resultSetNames && resultSetNames.length > 0) {
         const namedResults: any = {};
         resultSetNames.forEach((name, index) => {
-          namedResults[name] = result.recordsets[index];
+          namedResults[name] = Array.isArray(result.recordsets)
+            ? result.recordsets[index]
+            : result.recordsets;
         });
         return namedResults;
       }

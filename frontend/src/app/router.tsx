@@ -5,6 +5,8 @@ import { LoadingSpinner } from '@/core/components/LoadingSpinner';
 import { ErrorBoundary } from '@/core/components/ErrorBoundary';
 
 const HomePage = lazy(() => import('@/pages/Home'));
+const TaskListPage = lazy(() => import('@/pages/TaskList'));
+const TaskCreatePage = lazy(() => import('@/pages/TaskCreate'));
 const NotFoundPage = lazy(() => import('@/pages/NotFound'));
 
 /**
@@ -18,7 +20,11 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
-    errorElement: <ErrorBoundary />,
+    errorElement: (
+      <ErrorBoundary>
+        <div>Error occurred</div>
+      </ErrorBoundary>
+    ),
     children: [
       {
         index: true,
@@ -27,6 +33,27 @@ export const router = createBrowserRouter([
             <HomePage />
           </Suspense>
         ),
+      },
+      {
+        path: 'tasks',
+        children: [
+          {
+            index: true,
+            element: (
+              <Suspense fallback={<LoadingSpinner />}>
+                <TaskListPage />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'create',
+            element: (
+              <Suspense fallback={<LoadingSpinner />}>
+                <TaskCreatePage />
+              </Suspense>
+            ),
+          },
+        ],
       },
       {
         path: '*',
